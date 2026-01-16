@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nuestros Momentos</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --accent-pink: #ff7675;
+            --black: #000000;
+
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        #bg-decorations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            opacity: 0;
+            user-select: none;
+            z-index: 11;
+            animation: float-up var(--d) linear infinite;
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(110vh) scale(0.8) rotate(0deg); opacity: 0; }
+            15% { opacity: 0.6; }
+            85% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+        }
+
+        #gallery {
+            height: 100vh;
+            height: 100dvh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            height: 100vh;
+            height: 100dvh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            scroll-snap-align: start;
+            padding: 20px;
+            box-sizing: border-box;
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+            transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .section.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        img, video {
+            max-width: 100%;
+            max-height: 75vh;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            background: #fff;
+            object-fit: contain;
+        }
+
+        .farewell {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 30px;
+            max-width: 500px;
+        }
+
+        .heart-beat {
+            font-size: 4rem;
+            color: var(--accent-pink);
+            animation: beat 1.5s infinite;
+            display: inline-block;
+        }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .farewell h21 { font-weight: 300; font-size: 2rem; color: var(--text-main); }
+        .farewell h2 { font-weight: 300; font-size: 2rem; color: var(--text-main); }
+        .farewell p { font-style: italic; color: var(--text-muted); line-height: 1.6; }
+        
+        .youtube-link {
+            display: block;
+            margin-top: 30px;
+            color: var(--accent-pink);
+            text-decoration: none;
+            font-size: 0.85rem;
+            word-break: break-all;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bg-decorations"></div>
+
+    <div id="gallery"></div>
+
+    <script>
+        const fotos = [
+            "foto1.jpg", "foto2.jpg", "foto3.jpg", "foto4.jpg", "foto5.jpg",
+            "foto6.jpg", "foto7.jpg", "foto8.jpg", "foto9.jpg", "foto10.jpg",
+            "foto11.jpg", "foto12.jpg", "foto13.jpg", "foto14.jpg", "foto15.jpg",
+            "foto16.jpg"
+        ];
+        const videoFinal = "video1.mp4";
+        const folder = "Photos/";
+
+        const gallery = document.getElementById('gallery');
+        const bg = document.getElementById('bg-decorations');
+
+        function initBackground() {
+            const icons = ['✨', '❤️', '🌸', '🤍', '☁️'];
+            for (let i = 0; i < 20; i++) {
+                const div = document.createElement('div');
+                div.className = 'particle';
+                div.innerText = icons[Math.floor(Math.random() * icons.length)];
+                div.style.left = Math.random() * 100 + 'vw';
+                div.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                div.style.setProperty('--d', (Math.random() * 10 + 10) + 's');
+                div.style.animationDelay = (Math.random() * -20) + 's';
+                bg.appendChild(div);
+            }
+        }
+
+        fotos.forEach(name => {
+            const sec = document.createElement('div');
+            sec.className = 'section';
+            sec.innerHTML = `<img src="${folder}${name}" alt="Recuerdo">`;
+            gallery.appendChild(sec);
+        });
+
+        const vidSec = document.createElement('div');
+        vidSec.className = 'section';
+        vidSec.innerHTML = `
+            <video controls playsinline>
+                <source src="${folder}${videoFinal}" type="video/mp4">
+            </video>
+        `;
+        gallery.appendChild(vidSec);
+
+        const msgSec = document.createElement('div');
+        msgSec.className = 'section';
+        msgSec.innerHTML = `
+            <div class="farewell">
+                <div class="heart-beat">❤️</div>
+                <h2>Gracias por todo</h2>
+                <p>"Cada una de estas imágenes guarda un pedacito de nuestra historia. Gracias por estar ahí cuando estuve de malas, en las buenas y en las peores, y por apoyarme en todo.</p>
+                <p>Este año creí que podíamos volver a hablar como lo hacíamos en el liceo; esa fue una de las mejores épocas que tuve junto a ti.</p>
+                <p>Sabes que siempre intenté hablar contigo lo más que pude, pero después de tanto buscarte, ya me había cansado.</p>
+                <p>No hay palabras que puedan expresar lo mucho que te aprecio; no sabes cuánto me duele esto, pero es lo mejor.</p>
+                <p>Solo espero que en el futuro nos veamos de vuelta y podamos empezar de cero... pero de una mejor forma."</p>
+                <div style="letter-spacing: 3px; font-size: 1.0rem; color: #000000; margin-top: 20px;"> Con todo mi amor, tu siempre amigo.</div>
+                <div style="letter-spacing: 3px; font-size: 1.5rem; color: #ff7675; margin-top: 20px;"> SIEMPRE ESTARE CUANDO ME NECESITES</div>
+                <div style="letter-spacing: 3px; font-size: 1.5rem; color: #ff7675; margin-top: 20px;"> NO LO DUDES</div>
+                <a href="https://youtu.be/SxLIRvt2Wq4?si=Flpvs163SWNmZtam" target="_blank" class="youtube-link">
+                    https://youtu.be/SxLIRvt2Wq4?si=Flpvs163SWNmZtam
+                </a>
+            </div>
+        `;
+        gallery.appendChild(msgSec);
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.section').forEach(s => observer.observe(s));
+        initBackground();
+    </script>
+</body>
+</html>
