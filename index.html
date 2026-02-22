@@ -11,7 +11,6 @@
             --text-muted: #636e72;
             --accent-pink: #ff7675;
             --black: #000000;
-
         }
 
         body, html {
@@ -107,7 +106,6 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.2); }
         }
-        .farewell h21 { font-weight: 300; font-size: 2rem; color: var(--text-main); }
         .farewell h2 { font-weight: 300; font-size: 2rem; color: var(--text-main); }
         .farewell p { font-style: italic; color: var(--text-muted); line-height: 1.6; }
         
@@ -120,13 +118,41 @@
             word-break: break-all;
             opacity: 0.8;
         }
+
+        /* Botón de Auto-Scroll Ajustado */
+        #auto-scroll-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--accent-pink);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 100;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        #auto-scroll-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
 
     <div id="bg-decorations"></div>
-
     <div id="gallery"></div>
+
+    <button id="auto-scroll-btn" title="Reproducción automática">▶️</button>
 
     <script>
         const fotos = [
@@ -200,7 +226,38 @@
 
         document.querySelectorAll('.section').forEach(s => observer.observe(s));
         initBackground();
+
+        // Lógica de Auto-Scroll (Velocidad Aumentada)
+        const autoScrollBtn = document.getElementById('auto-scroll-btn');
+        let autoScrollInterval;
+        let isAutoScrolling = false;
+
+        autoScrollBtn.addEventListener('click', () => {
+            isAutoScrolling = !isAutoScrolling;
+            
+            if (isAutoScrolling) {
+                gallery.style.scrollSnapType = 'none';
+                autoScrollBtn.innerHTML = '⏸️';
+                
+                autoScrollInterval = setInterval(() => {
+                    // Bajamos 2 píxeles cada 16ms para que sea rápido y fluido
+                    gallery.scrollTop += 6;
+                    
+                    if (gallery.scrollTop + gallery.clientHeight >= gallery.scrollHeight - 5) {
+                        stopAutoScroll();
+                    }
+                }, 16); 
+            } else {
+                stopAutoScroll();
+            }
+        });
+
+        function stopAutoScroll() {
+            clearInterval(autoScrollInterval);
+            isAutoScrolling = false;
+            autoScrollBtn.innerHTML = '▶️';
+            gallery.style.scrollSnapType = 'y mandatory';
+        }
     </script>
 </body>
-
 </html>
