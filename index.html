@@ -6,10 +6,12 @@
     <title>Nuestros Momentos</title>
     <style>
         :root {
-            --bg-color: #ffffff;
+            --bg-color: #fffaf7;
             --text-main: #2d3436;
             --text-muted: #636e72;
             --accent-pink: #ff7675;
+            --accent-gold: #ffc46b;
+            --accent-lavender: #a29bfe;
             --black: #000000;
         }
 
@@ -20,6 +22,66 @@
             font-family: 'Segoe UI', sans-serif;
             overflow: hidden;
             height: 100%;
+        }
+
+        /* ---------- Fondo luminoso (aurora) ---------- */
+        #aurora {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .aurora-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.55;
+            mix-blend-mode: multiply;
+            animation: drift 22s ease-in-out infinite;
+        }
+
+        .blob1 {
+            width: 55vw; height: 55vw;
+            background: radial-gradient(circle, var(--accent-pink), transparent 70%);
+            top: -15%; left: -10%;
+            animation-duration: 26s;
+        }
+
+        .blob2 {
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, var(--accent-gold), transparent 70%);
+            bottom: -20%; right: -15%;
+            animation-duration: 32s;
+            animation-delay: -6s;
+        }
+
+        .blob3 {
+            width: 45vw; height: 45vw;
+            background: radial-gradient(circle, var(--accent-lavender), transparent 70%);
+            top: 30%; right: 10%;
+            animation-duration: 20s;
+            animation-delay: -12s;
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(6vw, 4vh) scale(1.08); }
+            66% { transform: translate(-4vw, 6vh) scale(0.95); }
+        }
+
+        .sparkle {
+            position: absolute;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 6px 2px rgba(255,255,255,0.9);
+            animation: twinkle var(--td) ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.15; transform: scale(0.6); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
         #bg-decorations {
@@ -86,6 +148,12 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.08);
             background: #fff;
             object-fit: contain;
+            transition: box-shadow 1.2s ease;
+        }
+
+        .section.active img,
+        .section.active video {
+            box-shadow: 0 0 45px 6px rgba(255, 196, 107, 0.35), 0 15px 35px rgba(0,0,0,0.12);
         }
 
         .caption {
@@ -109,6 +177,7 @@
             font-size: 2.3rem;
             color: var(--text-main);
             margin-bottom: 10px;
+            text-shadow: 0 0 25px rgba(255, 196, 107, 0.45);
         }
 
         .cover .subtitle {
@@ -134,9 +203,11 @@
         .farewell {
             text-align: center;
             padding: 40px;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(6px);
             border-radius: 30px;
             max-width: 500px;
+            box-shadow: 0 0 60px rgba(255, 118, 117, 0.25);
         }
 
         .heart-beat {
@@ -144,6 +215,7 @@
             color: var(--accent-pink);
             animation: beat 1.5s infinite;
             display: inline-block;
+            filter: drop-shadow(0 0 12px rgba(255, 118, 117, 0.6));
         }
 
         @keyframes beat {
@@ -163,11 +235,23 @@
             opacity: 0.8;
         }
 
-        /* Botón de Auto-Scroll Ajustado */
-        #auto-scroll-btn {
+        /* ---------- Barra de progreso ---------- */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-pink), var(--accent-gold));
+            z-index: 200;
+            transition: width 0.15s ease-out;
+            box-shadow: 0 0 8px rgba(255, 118, 117, 0.6);
+        }
+
+        /* ---------- Controles ---------- */
+        .control-btn {
             position: fixed;
             bottom: 25px;
-            right: 25px;
             width: 45px;
             height: 45px;
             border-radius: 50%;
@@ -181,21 +265,111 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            opacity: 0.7;
+            opacity: 0.8;
             transition: all 0.3s ease;
         }
 
-        #auto-scroll-btn:hover {
+        .control-btn:hover {
             opacity: 1;
             transform: scale(1.1);
+        }
+
+        #auto-scroll-btn { right: 25px; }
+        #music-btn { right: 82px; background-color: var(--accent-lavender); }
+
+        /* ---------- Pantalla de bienvenida ---------- */
+        #welcome-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            background: linear-gradient(135deg, #fff5f5, #fff9ec);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px;
+            box-sizing: border-box;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        #welcome-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #welcome-screen .glow-heart {
+            font-size: 3.5rem;
+            animation: beat 1.6s infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 118, 117, 0.7));
+            margin-bottom: 10px;
+        }
+
+        #welcome-screen h1 {
+            font-weight: 300;
+            font-size: 1.8rem;
+            color: var(--text-main);
+            margin: 10px 0;
+        }
+
+        #welcome-screen p {
+            color: var(--text-muted);
+            font-style: italic;
+            max-width: 340px;
+        }
+
+        #enter-btn {
+            margin-top: 25px;
+            padding: 14px 34px;
+            border-radius: 40px;
+            border: none;
+            background: linear-gradient(90deg, var(--accent-pink), var(--accent-gold));
+            color: white;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 118, 117, 0.4);
+            animation: pulse-btn 2s infinite;
+        }
+
+        @keyframes pulse-btn {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        #yt-player-container {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
 
+    <div id="aurora">
+        <div class="aurora-blob blob1"></div>
+        <div class="aurora-blob blob2"></div>
+        <div class="aurora-blob blob3"></div>
+    </div>
+
+    <div id="progress-bar"></div>
     <div id="bg-decorations"></div>
     <div id="gallery"></div>
 
+    <div id="welcome-screen">
+        <div class="glow-heart">❤️</div>
+        <h1>Un pequeño regalo para ti</h1>
+        <p>Antes de empezar, toca el botón para que suene nuestra canción de fondo.</p>
+        <button id="enter-btn">Toca para comenzar ✨</button>
+    </div>
+
+    <div id="yt-player-container"><div id="yt-player"></div></div>
+
+    <button id="music-btn" title="Música">🎵</button>
     <button id="auto-scroll-btn" title="Reproducción automática">▶️</button>
 
     <script>
@@ -221,6 +395,7 @@
 
         const gallery = document.getElementById('gallery');
         const bg = document.getElementById('bg-decorations');
+        const aurora = document.getElementById('aurora');
 
         function initBackground() {
             const icons = ['✨', '❤️', '🌸', '🤍', '☁️'];
@@ -233,6 +408,21 @@
                 div.style.setProperty('--d', (Math.random() * 10 + 10) + 's');
                 div.style.animationDelay = (Math.random() * -20) + 's';
                 bg.appendChild(div);
+            }
+        }
+
+        function initSparkles() {
+            for (let i = 0; i < 40; i++) {
+                const s = document.createElement('div');
+                s.className = 'sparkle';
+                const size = Math.random() * 3 + 1;
+                s.style.width = size + 'px';
+                s.style.height = size + 'px';
+                s.style.left = Math.random() * 100 + 'vw';
+                s.style.top = Math.random() * 100 + 'vh';
+                s.style.setProperty('--td', (Math.random() * 4 + 2) + 's');
+                s.style.animationDelay = (Math.random() * -6) + 's';
+                aurora.appendChild(s);
             }
         }
 
@@ -282,12 +472,14 @@
                 <div style="letter-spacing: 3px; font-size: 1.0rem; color: #000000; margin-top: 20px;"> Con todo mi amor, tu siempre "amigo".</div>
                 <div style="letter-spacing: 3px; font-size: 1.5rem; color: #ff7675; margin-top: 20px;"> SIEMPRE ESTARE CUANDO ME NECESITES</div>
                 <div style="letter-spacing: 3px; font-size: 1.5rem; color: #ff7675; margin-top: 20px;"> NO LO DUDES</div>
-                <a href="https://youtu.be/SxLIRvt2Wq4?si=Flpvs163SWNmZtam" target="_blank" class="youtube-link">
-                    https://youtu.be/SxLIRvt2Wq4?si=Flpvs163SWNmZtam
+                <a href="https://www.youtube.com/watch?v=7-wUAhxAIgU" target="_blank" class="youtube-link">
+                    Destello - Kidd Voodoo (la canción de fondo)
                 </a>
             </div>
         `;
         gallery.appendChild(msgSec);
+
+        const sections = () => document.querySelectorAll('.section');
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -295,10 +487,19 @@
             });
         }, { threshold: 0.3 });
 
-        document.querySelectorAll('.section').forEach(s => observer.observe(s));
+        sections().forEach(s => observer.observe(s));
         initBackground();
+        initSparkles();
 
-        // Lógica de Auto-Scroll (Velocidad Aumentada)
+        // Barra de progreso de scroll
+        const progressBar = document.getElementById('progress-bar');
+        gallery.addEventListener('scroll', () => {
+            const max = gallery.scrollHeight - gallery.clientHeight;
+            const pct = max > 0 ? (gallery.scrollTop / max) * 100 : 0;
+            progressBar.style.width = pct + '%';
+        });
+
+        // Lógica de Auto-Scroll
         const autoScrollBtn = document.getElementById('auto-scroll-btn');
         let autoScrollInterval;
         let isAutoScrolling = false;
@@ -311,7 +512,6 @@
                 autoScrollBtn.innerHTML = '⏸️';
 
                 autoScrollInterval = setInterval(() => {
-                    // Bajamos 2 píxeles cada 16ms para que sea rápido y fluido
                     gallery.scrollTop += 6;
 
                     if (gallery.scrollTop + gallery.clientHeight >= gallery.scrollHeight - 5) {
@@ -329,6 +529,63 @@
             autoScrollBtn.innerHTML = '▶️';
             gallery.style.scrollSnapType = 'y mandatory';
         }
+
+        // ---------- Música de fondo (YouTube: Destello - Kidd Voodoo) ----------
+        let ytPlayer;
+        let ytReady = false;
+        let musicPlaying = false;
+
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(tag);
+
+        window.onYouTubeIframeAPIReady = function () {
+            ytPlayer = new YT.Player('yt-player', {
+                height: '1',
+                width: '1',
+                videoId: '7-wUAhxAIgU',
+                playerVars: {
+                    autoplay: 0,
+                    controls: 0,
+                    loop: 1,
+                    playlist: '7-wUAhxAIgU'
+                },
+                events: {
+                    onReady: () => { ytReady = true; }
+                }
+            });
+        };
+
+        const musicBtn = document.getElementById('music-btn');
+        musicBtn.addEventListener('click', toggleMusic);
+
+        function toggleMusic() {
+            if (!ytReady) return;
+            if (musicPlaying) {
+                ytPlayer.pauseVideo();
+                musicBtn.innerHTML = '🔇';
+            } else {
+                ytPlayer.playVideo();
+                musicBtn.innerHTML = '🎵';
+            }
+            musicPlaying = !musicPlaying;
+        }
+
+        // ---------- Pantalla de bienvenida ----------
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const enterBtn = document.getElementById('enter-btn');
+
+        enterBtn.addEventListener('click', () => {
+            welcomeScreen.classList.add('hide');
+            // Pequeño margen para asegurar que la API de YouTube ya cargó
+            setTimeout(() => {
+                if (ytReady && !musicPlaying) {
+                    ytPlayer.playVideo();
+                    musicPlaying = true;
+                    musicBtn.innerHTML = '🎵';
+                }
+            }, 400);
+        });
     </script>
 </body>
 </html>
