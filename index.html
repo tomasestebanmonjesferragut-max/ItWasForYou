@@ -63,6 +63,7 @@
             height: 100dvh;
             width: 100%;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             scroll-snap-align: start;
@@ -87,6 +88,49 @@
             object-fit: contain;
         }
 
+        .caption {
+            margin-top: 16px;
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            text-align: center;
+            max-width: 480px;
+            padding: 0 10px;
+        }
+
+        .cover {
+            text-align: center;
+            padding: 40px;
+            max-width: 520px;
+        }
+
+        .cover h1 {
+            font-weight: 300;
+            font-size: 2.3rem;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .cover .subtitle {
+            color: var(--text-muted);
+            font-style: italic;
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+
+        .cover .scroll-hint {
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: var(--accent-pink);
+            letter-spacing: 2px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
         .farewell {
             text-align: center;
             padding: 40px;
@@ -108,7 +152,7 @@
         }
         .farewell h2 { font-weight: 300; font-size: 2rem; color: var(--text-main); }
         .farewell p { font-style: italic; color: var(--text-muted); line-height: 1.6; }
-        
+
         .youtube-link {
             display: block;
             margin-top: 30px;
@@ -156,10 +200,21 @@
 
     <script>
         const fotos = [
-            "foto1.jpg", "foto2.jpg", "foto3.jpg", "foto4.jpg", "foto5.jpg",
-            "foto6.jpg", "foto7.jpg", "foto8.jpg", "foto9.jpg", "foto10.jpg",
-            "foto11.jpg", "foto12.jpg", "foto13.jpg", "foto14.jpg", "foto15.jpg",
-            "foto16.jpg"
+            { src: "foto1.jpg" },
+            { src: "foto2.jpg" },
+            { src: "foto3.jpg" },
+            { src: "foto4.jpg" },
+            { src: "foto5.jpg" },
+            { src: "foto6.jpg" },
+            { src: "foto7.jpg" },
+            { src: "foto8.jpg" },
+            { src: "foto9.jpg" },
+            { src: "foto10.jpg" },
+            { src: "foto11.jpg" },
+            { src: "foto12.jpg", caption: "Subiendo el cerro, con palo de trekking improvisado incluido." },
+            { src: "foto13.jpg" },
+            { src: "foto14.jpg" },
+            { src: "foto15.jpg", caption: "De vuelta a casa, cansados de la caminata, te quedaste dormida en mi hombro en la micro. De esos momentos simples que uno no olvida." }
         ];
         const videoFinal = "video1.mp4";
         const folder = "Photos/";
@@ -181,10 +236,25 @@
             }
         }
 
-        fotos.forEach(name => {
+        // Portada
+        const coverSec = document.createElement('div');
+        coverSec.className = 'section';
+        coverSec.innerHTML = `
+            <div class="cover">
+                <h1>Nuestros Momentos</h1>
+                <div class="subtitle">Un pequeño repaso de todo lo que vivimos juntos, antes de decirnos, por ahora, hasta luego.</div>
+                <div class="scroll-hint">DESLIZA PARA VER ↓</div>
+            </div>
+        `;
+        gallery.appendChild(coverSec);
+
+        fotos.forEach(foto => {
             const sec = document.createElement('div');
             sec.className = 'section';
-            sec.innerHTML = `<img src="${folder}${name}" alt="Recuerdo">`;
+            sec.innerHTML = `
+                <img src="${folder}${foto.src}" alt="Recuerdo">
+                ${foto.caption ? `<div class="caption">${foto.caption}</div>` : ''}
+            `;
             gallery.appendChild(sec);
         });
 
@@ -205,6 +275,7 @@
                 <h2>Gracias por todo</h2>
                 <p>"Cada una de estas imágenes guarda un pedacito de nuestra historia. Gracias por estar ahí cuando estuve de malas, en las buenas y en las peores, y por apoyarme en todo.</p>
                 <p>Este año creí que podíamos volver a hablar como lo hacíamos en el liceo; esa fue una de las mejores épocas que tuve junto a ti.</p>
+                <p>Todavía me acuerdo de esa vuelta del cerro, agotados los dos, y tú quedándote dormida en mi hombro en la micro. Fue un momento simple, pero de esos que se quedan grabados.</p>
                 <p>Sabes que siempre intenté hablar contigo lo más que pude, pero después de tanto buscarte, ya me había cansado.</p>
                 <p>No hay palabras que puedan expresar lo mucho que te aprecio; no sabes cuánto me duele esto, pero es lo mejor.</p>
                 <p>Solo espero que en el futuro nos veamos de vuelta y podamos empezar de cero... pero de una mejor forma."</p>
@@ -234,19 +305,19 @@
 
         autoScrollBtn.addEventListener('click', () => {
             isAutoScrolling = !isAutoScrolling;
-            
+
             if (isAutoScrolling) {
                 gallery.style.scrollSnapType = 'none';
                 autoScrollBtn.innerHTML = '⏸️';
-                
+
                 autoScrollInterval = setInterval(() => {
                     // Bajamos 2 píxeles cada 16ms para que sea rápido y fluido
                     gallery.scrollTop += 6;
-                    
+
                     if (gallery.scrollTop + gallery.clientHeight >= gallery.scrollHeight - 5) {
                         stopAutoScroll();
                     }
-                }, 16); 
+                }, 16);
             } else {
                 stopAutoScroll();
             }
