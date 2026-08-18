@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nuestros Momentos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #fffaf7;
@@ -13,13 +16,15 @@
             --accent-gold: #ffc46b;
             --accent-lavender: #a29bfe;
             --black: #000000;
+            --font-display: 'Cormorant Garamond', 'Segoe UI', serif;
+            --font-body: 'Poppins', 'Segoe UI', sans-serif;
         }
 
         body, html {
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
-            font-family: 'Segoe UI', sans-serif;
+            font-family: var(--font-body);
             overflow: hidden;
             height: 100%;
         }
@@ -141,29 +146,39 @@
             transform: scale(1) translateY(0);
         }
 
+        .photo-frame {
+            position: relative;
+            padding: 14px;
+            border-radius: 26px;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 25px 50px rgba(45, 52, 54, 0.1);
+            transition: box-shadow 1.2s ease, transform 1.2s ease;
+            overflow: hidden;
+        }
+
+        .section.active .photo-frame {
+            box-shadow: 0 0 55px 8px rgba(255, 196, 107, 0.3), 0 25px 55px rgba(45, 52, 54, 0.16);
+        }
+
         img, video {
+            display: block;
             max-width: 100%;
-            max-height: 75vh;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            max-height: 72vh;
+            border-radius: 16px;
             background: #fff;
             object-fit: contain;
-            transition: box-shadow 1.2s ease;
         }
 
-        .section.active img,
-        .section.active video {
-            box-shadow: 0 0 45px 6px rgba(255, 196, 107, 0.35), 0 15px 35px rgba(0,0,0,0.12);
+        img {
+            transform: scale(1.03);
+            transition: transform 9s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .caption {
-            margin-top: 16px;
-            font-style: italic;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            text-align: center;
-            max-width: 480px;
-            padding: 0 10px;
+        .section.active img {
+            transform: scale(1.09);
         }
 
         .cover {
@@ -173,18 +188,21 @@
         }
 
         .cover h1 {
-            font-weight: 300;
-            font-size: 2.3rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 3rem;
+            letter-spacing: 0.5px;
             color: var(--text-main);
-            margin-bottom: 10px;
+            margin-bottom: 14px;
             text-shadow: 0 0 25px rgba(255, 196, 107, 0.45);
         }
 
         .cover .subtitle {
+            font-family: var(--font-display);
             color: var(--text-muted);
             font-style: italic;
-            line-height: 1.6;
-            font-size: 1.05rem;
+            line-height: 1.7;
+            font-size: 1.3rem;
         }
 
         .cover .scroll-hint {
@@ -202,13 +220,32 @@
 
         .farewell {
             text-align: center;
-            padding: 40px;
+            padding: 44px 36px;
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(6px);
             border-radius: 30px;
-            max-width: 500px;
+            max-width: 520px;
+            max-height: 82vh;
+            overflow-y: auto;
             box-shadow: 0 0 60px rgba(255, 118, 117, 0.25);
         }
+
+        .farewell p {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.9s ease, transform 0.9s ease;
+        }
+
+        .section.active .farewell p {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section.active .farewell p:nth-of-type(1) { transition-delay: 0.2s; }
+        .section.active .farewell p:nth-of-type(2) { transition-delay: 0.6s; }
+        .section.active .farewell p:nth-of-type(3) { transition-delay: 1.0s; }
+        .section.active .farewell p:nth-of-type(4) { transition-delay: 1.4s; }
+        .section.active .farewell p:nth-of-type(5) { transition-delay: 1.8s; }
 
         .heart-beat {
             font-size: 4rem;
@@ -222,8 +259,8 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.2); }
         }
-        .farewell h2 { font-weight: 300; font-size: 2rem; color: var(--text-main); }
-        .farewell p { font-style: italic; color: var(--text-muted); line-height: 1.6; }
+        .farewell h2 { font-family: var(--font-display); font-weight: 600; font-size: 2.3rem; color: var(--text-main); }
+        .farewell p { font-family: var(--font-display); font-size: 1.15rem; font-style: italic; color: var(--text-muted); line-height: 1.7; }
 
         .youtube-link {
             display: block;
@@ -307,13 +344,16 @@
         }
 
         #welcome-screen h1 {
-            font-weight: 300;
-            font-size: 1.8rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 2.1rem;
             color: var(--text-main);
             margin: 10px 0;
         }
 
         #welcome-screen p {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
             color: var(--text-muted);
             font-style: italic;
             max-width: 340px;
@@ -363,13 +403,13 @@
     <div id="welcome-screen">
         <div class="glow-heart">❤️</div>
         <h1>Un pequeño regalo para ti</h1>
-        <p>Antes de empezar, toca el botón para que suene nuestra canción de fondo.</p>
+        <p>Ya está sonando nuestra canción de fondo. Toca para comenzar.</p>
         <button id="enter-btn">Toca para comenzar ✨</button>
     </div>
 
     <div id="yt-player-container"><div id="yt-player"></div></div>
 
-    <button id="music-btn" title="Música">🎵</button>
+    <button id="music-btn" title="Música">🔇</button>
     <button id="auto-scroll-btn" title="Reproducción automática">▶️</button>
 
     <script>
@@ -385,10 +425,10 @@
             { src: "foto9.jpg" },
             { src: "foto10.jpg" },
             { src: "foto11.jpg" },
-            { src: "foto12.jpg", caption: "Subiendo el cerro, con palo de trekking improvisado incluido." },
+            { src: "foto12.jpg" },
             { src: "foto13.jpg" },
             { src: "foto14.jpg" },
-            { src: "foto15.jpg", caption: "De vuelta a casa, cansados de la caminata, te quedaste dormida en mi hombro en la micro. De esos momentos simples que uno no olvida." }
+            { src: "foto15.jpg" }
         ];
         const videoFinal = "video1.mp4";
         const folder = "Photos/";
@@ -442,8 +482,9 @@
             const sec = document.createElement('div');
             sec.className = 'section';
             sec.innerHTML = `
-                <img src="${folder}${foto.src}" alt="Recuerdo">
-                ${foto.caption ? `<div class="caption">${foto.caption}</div>` : ''}
+                <div class="photo-frame">
+                    <img src="${folder}${foto.src}" alt="Recuerdo">
+                </div>
             `;
             gallery.appendChild(sec);
         });
@@ -451,9 +492,11 @@
         const vidSec = document.createElement('div');
         vidSec.className = 'section';
         vidSec.innerHTML = `
-            <video controls playsinline>
-                <source src="${folder}${videoFinal}" type="video/mp4">
-            </video>
+            <div class="photo-frame">
+                <video controls playsinline>
+                    <source src="${folder}${videoFinal}" type="video/mp4">
+                </video>
+            </div>
         `;
         gallery.appendChild(vidSec);
 
@@ -531,9 +574,13 @@
         }
 
         // ---------- Música de fondo (YouTube: Destello - Kidd Voodoo) ----------
+        // Los navegadores bloquean el audio con sonido hasta que hay una
+        // interacción del usuario. Por eso arrancamos en silencio apenas
+        // carga la página y activamos el sonido en el primer toque/scroll,
+        // que en la práctica ocurre casi al instante (ej: tocar "comenzar").
         let ytPlayer;
         let ytReady = false;
-        let musicPlaying = false;
+        let isMuted = true;
 
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -545,31 +592,46 @@
                 width: '1',
                 videoId: '7-wUAhxAIgU',
                 playerVars: {
-                    autoplay: 0,
+                    autoplay: 1,
+                    mute: 1,
                     controls: 0,
                     loop: 1,
                     playlist: '7-wUAhxAIgU'
                 },
                 events: {
-                    onReady: () => { ytReady = true; }
+                    onReady: (e) => {
+                        ytReady = true;
+                        e.target.playVideo();
+                    }
                 }
             });
         };
 
-        const musicBtn = document.getElementById('music-btn');
-        musicBtn.addEventListener('click', toggleMusic);
-
-        function toggleMusic() {
-            if (!ytReady) return;
-            if (musicPlaying) {
-                ytPlayer.pauseVideo();
-                musicBtn.innerHTML = '🔇';
-            } else {
-                ytPlayer.playVideo();
-                musicBtn.innerHTML = '🎵';
-            }
-            musicPlaying = !musicPlaying;
+        function unlockSound() {
+            if (!ytReady || !isMuted) return;
+            ytPlayer.unMute();
+            ytPlayer.setVolume(100);
+            if (ytPlayer.getPlayerState() !== 1) ytPlayer.playVideo();
+            isMuted = false;
+            musicBtn.innerHTML = '🎵';
         }
+
+        ['click', 'touchstart', 'scroll', 'keydown'].forEach(evt => {
+            document.addEventListener(evt, unlockSound, { once: true, passive: true });
+        });
+
+        const musicBtn = document.getElementById('music-btn');
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!ytReady) return;
+            if (isMuted) {
+                unlockSound();
+            } else {
+                ytPlayer.mute();
+                isMuted = true;
+                musicBtn.innerHTML = '🔇';
+            }
+        });
 
         // ---------- Pantalla de bienvenida ----------
         const welcomeScreen = document.getElementById('welcome-screen');
@@ -577,14 +639,6 @@
 
         enterBtn.addEventListener('click', () => {
             welcomeScreen.classList.add('hide');
-            // Pequeño margen para asegurar que la API de YouTube ya cargó
-            setTimeout(() => {
-                if (ytReady && !musicPlaying) {
-                    ytPlayer.playVideo();
-                    musicPlaying = true;
-                    musicBtn.innerHTML = '🎵';
-                }
-            }, 400);
         });
     </script>
 </body>
